@@ -15,7 +15,7 @@ import com.linecorp.decaton.protobuf.ProtocolBuffersSerializer;
 import sandbox.protocol.TaskOuterClass.Task;
 
 @Configuration
-public class DecatonConfiguration {
+public class AppConfiguration {
     @Bean
     public DecatonClient<Task> decatonClient() {
         final Properties config = new Properties();
