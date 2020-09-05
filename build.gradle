@@ -1,0 +1,81 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        jcenter()
+    }
+    dependencies {
+        classpath("com.google.protobuf:protobuf-gradle-plugin:0.8.10")
+        classpath("com.github.jengelman.gradle.plugins:shadow:4.0.3")
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:2.3.3.RELEASE")
+        classpath("io.spring.gradle:dependency-management-plugin:1.0.9.RELEASE")
+    }
+}
+
+repositories {
+    mavenCentral()
+    jcenter()
+}
+
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'com.google.protobuf'
+apply plugin: 'com.github.johnrengelman.shadow'
+apply plugin: 'io.spring.dependency-management'
+apply plugin: 'org.springframework.boot'
+
+group 'sandbox'
+version '1.0-SNAPSHOT'
+sourceCompatibility = '11'
+
+repositories {
+    mavenCentral()
+    jcenter()
+}
+
+def protobufVersion = '3.11.4'
+def grpcVersion = '1.28.0'
+def decatonVersion = '0.0.34'
+
+dependencies {
+    implementation "com.google.protobuf:protobuf-java:$protobufVersion"
+    implementation "io.grpc:grpc-netty-shaded:$grpcVersion"
+    implementation "io.grpc:grpc-protobuf:$grpcVersion"
+    implementation "io.grpc:grpc-stub:$grpcVersion"
+
+    implementation "com.linecorp.decaton:decaton-common:$decatonVersion"
+    implementation "com.linecorp.decaton:decaton-client:$decatonVersion"
+    implementation "com.linecorp.decaton:decaton-protobuf:$decatonVersion"
+    implementation "com.linecorp.decaton:decaton-processor:$decatonVersion"
+
+    implementation "org.springframework.boot:spring-boot-starter-webflux"
+    implementation "com.linecorp.armeria:armeria-spring-boot2-webflux-starter:1.0.0"
+    implementation 'io.micrometer:micrometer-registry-prometheus:1.5.4'
+
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+}
+
+protobuf {
+    protoc {
+        artifact = "com.google.protobuf:protoc:$protobufVersion"
+    }
+    plugins {
+        grpc {
+            artifact = 'io.grpc:protoc-gen-grpc-java:1.28.0'
+        }
+    }
+    generateProtoTasks {
+        all()*.plugins {
+            grpc {}
+        }
+    }
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs 'build/generated/source/proto/main/grpc'
+            srcDirs 'build/generated/source/proto/main/java'
+        }
+    }
+}

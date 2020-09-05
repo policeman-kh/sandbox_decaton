@@ -1,0 +1,7 @@
+syntax = "proto3";
+package sandbox.protocol;
+
+message Task {
+    string key = 1;
+    string value = 2;
+}
